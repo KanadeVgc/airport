@@ -71,6 +71,15 @@ function Home() {
     }
   }, [])
 
+  // 初始化下拉選單：等資料載入後，預設選到最新一篇報告書
+  useEffect(() => {
+    if (status !== 'ok') return
+    if (editorialSlug) return
+    const firstEditorial = items.find((a) => a.section === 'EDITORIAL')
+    if (!firstEditorial?.slug) return
+    setEditorialSlug(firstEditorial.slug)
+  }, [items, status, editorialSlug])
+
   if (status === 'loading') return <LoadingBlock />
   if (status === 'error') return <ErrorBlock error={error} />
 
@@ -83,13 +92,6 @@ function Home() {
     editorialItems.find((a) => a.slug === editorialSlug) || editorialItems[0] || fallbackMain
 
   const featureArticles = featureItems
-
-  useEffect(() => {
-    if (editorialItems.length === 0) return
-    // 初始化下拉選單：預設選到最新一篇報告書
-    setEditorialSlug((s) => s || editorialItems[0]?.slug || '')
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editorialItems.length])
 
   return (
     <main>
