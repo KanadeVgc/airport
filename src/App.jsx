@@ -132,38 +132,37 @@ function Home() {
                 </Link>
 
                 <aside className="border border-border bg-white">
-                  <div className="px-5 py-4 border-b border-border flex items-center justify-between gap-3">
+                  <div className="px-5 py-4 border-b border-border">
                     <div className="text-sm tracking-[2px] text-textLight">其他報告書</div>
-                    {editorialItems.length > 1 ? (
-                      <select
-                        className="border border-border px-2 py-1 bg-white text-sm"
-                        value={editorialSlug || editorialItems[0]?.slug || ''}
-                        onChange={(e) => setEditorialSlug(e.target.value)}
-                        aria-label="選擇編輯室報告書"
-                      >
-                        {editorialItems.map((a) => (
-                          <option key={a.id} value={a.slug}>
-                            {a.issue ? `${a.issue} · ` : ''}
-                            {a.title}
-                          </option>
-                        ))}
-                      </select>
-                    ) : null}
                   </div>
                   <div className="divide-y divide-border">
-                    {editorialItems.map((a) => (
-                      <Link
-                        key={a.id}
-                        to={`/articles/${a.slug}`}
-                        className={`block px-5 py-4 hover:bg-[rgba(247,243,240,0.7)] transition ${
-                          a.id === editorialMain.id ? 'bg-[rgba(247,243,240,0.7)]' : ''
-                        }`}
-                      >
-                        <div className="text-xs tracking-[2px] text-textLight">{a.issue || 'EDITORIAL'}</div>
-                        <div className="mt-1 font-semibold leading-snug">{a.title}</div>
-                        {a.excerpt ? <div className="mt-2 text-sm text-textLight line-clamp-2">{a.excerpt}</div> : null}
-                      </Link>
-                    ))}
+                    {editorialItems
+                      .filter((a) => a.id !== editorialMain.id)
+                      .slice(0, 4)
+                      .map((a) => (
+                        <Link
+                          key={a.id}
+                          to={`/articles/${a.slug}`}
+                          className="block px-5 py-4 hover:bg-[rgba(247,243,240,0.7)] transition"
+                        >
+                          <div className="grid grid-cols-[86px_minmax(0,1fr)] gap-4 items-start">
+                            <div className="w-[86px] h-[64px] overflow-hidden bg-[#F2F2F2] shrink-0">
+                              {a.coverImageUrl ? (
+                                <img className="w-full h-full object-cover" src={a.coverImageUrl} alt={a.title} loading="lazy" />
+                              ) : null}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="text-xs tracking-[2px] text-textLight">{a.issue || 'EDITORIAL'}</div>
+                              <div className="mt-1 font-semibold leading-snug line-clamp-2">{a.title}</div>
+                              {a.excerpt ? <div className="mt-2 text-sm text-textLight line-clamp-2">{a.excerpt}</div> : null}
+                            </div>
+                          </div>
+                        </Link>
+                      ))}
+
+                    {editorialItems.filter((a) => a.id !== editorialMain.id).length === 0 ? (
+                      <div className="px-5 py-6 text-sm text-textLight">目前只有一篇報告書</div>
+                    ) : null}
                   </div>
                 </aside>
               </div>
