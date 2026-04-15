@@ -269,6 +269,15 @@ app.put('/admin/articles/:id', requireAuth, requireRole(['ADMIN', 'EDITOR']), as
   }
 })
 
+app.delete('/admin/articles/:id', requireAuth, requireRole(['ADMIN', 'EDITOR']), async (req, res) => {
+  try {
+    await prisma.article.delete({ where: { id: req.params.id } })
+    return res.status(204).end()
+  } catch {
+    return res.status(404).json({ error: 'NOT_FOUND' })
+  }
+})
+
 // --- 上傳：local（multipart）或 R2/S3 預簽名 ---
 const uploadMemory = multer({
   storage: multer.memoryStorage(),

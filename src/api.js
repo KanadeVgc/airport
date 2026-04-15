@@ -51,6 +51,8 @@ export const api = {
   adminCreateArticle: (payload, token) => request('/admin/articles', { method: 'POST', body: payload, token }),
   adminUpdateArticle: (id, payload, token) =>
     request(`/admin/articles/${encodeURIComponent(id)}`, { method: 'PUT', body: payload, token }),
+  adminDeleteArticle: (id, token) =>
+    request(`/admin/articles/${encodeURIComponent(id)}`, { method: 'DELETE', token }),
 
   presignUpload: (payload, token) => request('/admin/uploads/presign', { method: 'POST', body: payload, token }),
   completeUpload: (payload, token) => request('/admin/uploads/complete', { method: 'POST', body: payload, token }),

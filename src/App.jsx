@@ -367,13 +367,31 @@ function Admin() {
                       {a.status} · {a.slug}
                     </div>
                   </div>
-                  <button
-                    className="text-[0.9rem] border border-border px-3 py-2 hover:bg-[#333] hover:text-white transition"
-                    type="button"
-                    onClick={() => navigate(`/admin/edit/${a.id}`)}
-                  >
-                    編輯
-                  </button>
+                  <div className="flex gap-2">
+                    <button
+                      className="text-[0.9rem] border border-border px-3 py-2 hover:bg-[#333] hover:text-white transition"
+                      type="button"
+                      onClick={() => navigate(`/admin/edit/${a.id}`)}
+                    >
+                      編輯
+                    </button>
+                    <button
+                      className="text-[0.9rem] border border-red-300 text-red-700 px-3 py-2 hover:bg-red-700 hover:text-white transition"
+                      type="button"
+                      onClick={async () => {
+                        if (!confirm(`確定要刪除「${a.title}」？此操作無法復原。`)) return
+                        try {
+                          setError(null)
+                          await api.adminDeleteArticle(a.id, token)
+                          setItems((xs) => xs.filter((x) => x.id !== a.id))
+                        } catch (e) {
+                          setError(e)
+                        }
+                      }}
+                    >
+                      刪除
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
