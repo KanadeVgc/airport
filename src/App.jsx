@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Link, NavLink, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
+import { Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { api, getToken, setToken } from './api.js'
 
@@ -122,7 +122,7 @@ function Home() {
               {featureArticles.map((a) => (
                 <Link
                   key={a.id}
-                  to={`/articles/${a.slug}/intro`}
+                  to={`/articles/${a.slug}`}
                   className="bg-white border border-border cursor-pointer transition hover:shadow-sm flex flex-col h-full"
                 >
                   <div className="h-[230px] overflow-hidden">
