@@ -49,6 +49,7 @@ function Home() {
   const [items, setItems] = useState([])
   const [status, setStatus] = useState('loading')
   const [error, setError] = useState(null)
+  const [editorialSlug, setEditorialSlug] = useState('')
 
   useEffect(() => {
     let cancelled = false
@@ -77,11 +78,18 @@ function Home() {
   const featureItems = items.filter((a) => a.section !== 'EDITORIAL')
 
   // 若沒有任何文章被標成「編輯室報告書」，則用最新一篇頂上（避免首頁空掉）
-  const editorialMain = editorialItems[0] || items[0] || null
-  const featureArticles =
-    featureItems.length > 0
-      ? featureItems.filter((a) => a?.id !== editorialMain?.id)
-      : items.filter((a) => a?.id !== editorialMain?.id)
+  const fallbackMain = items[0] || null
+  const editorialMain =
+    editorialItems.find((a) => a.slug === editorialSlug) || editorialItems[0] || fallbackMain
+
+  const featureArticles = featureItems
+
+  useEffect(() => {
+    if (editorialItems.length === 0) return
+    // 初始化下拉選單：預設選到最新一篇報告書
+    setEditorialSlug((s) => s || editorialItems[0]?.slug || '')
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editorialItems.length])
 
   return (
     <main>
@@ -90,26 +98,59 @@ function Home() {
           <SectionTitle>編輯室報告書</SectionTitle>
 
           {editorialMain ? (
-            <Link
-              to={`/articles/${editorialMain.slug}`}
-              className="block bg-white border border-border cursor-pointer p-7 md:p-10 transition hover:shadow-sm"
-            >
-              <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 md:gap-10">
-                <div>
-                  {editorialMain.coverImageUrl ? (
-                    <img className="w-full" src={editorialMain.coverImageUrl} alt={editorialMain.title} loading="lazy" />
-                  ) : (
-                    <div className="w-full aspect-4/3 bg-[#F2F2F2]" />
-                  )}
+            <div className="space-y-4">
+              {editorialItems.length > 1 ? (
+                <div className="flex items-center gap-3">
+                  <div className="text-sm text-textLight">選擇文章</div>
+                  <select
+                    className="border border-border px-3 py-2 bg-white"
+                    value={editorialSlug || editorialItems[0]?.slug || ''}
+                    onChange={(e) => setEditorialSlug(e.target.value)}
+                  >
+                    {editorialItems.map((a) => (
+                      <option key={a.id} value={a.slug}>
+                        {a.issue ? `${a.issue} · ` : ''}
+                        {a.title}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-                <div>
-                  <span className="text-xs tracking-[2px] text-textLight">{editorialMain.issue || 'EDITORIAL'}</span>
-                  <h3 className="text-lg md:text-xl mt-2">{editorialMain.title}</h3>
-                  <p className="mt-3 text-textLight">{editorialMain.excerpt}</p>
-                  <span className="inline-block mt-5 text-accent font-bold border-b border-accent">閱讀全文 →</span>
+              ) : null}
+
+              <Link
+                to={`/articles/${editorialMain.slug}`}
+                className="block bg-white border border-border cursor-pointer p-7 md:p-10 transition hover:shadow-sm"
+              >
+                <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 md:gap-10">
+                  <div>
+                    {editorialMain.coverImageUrl ? (
+                      <img className="w-full" src={editorialMain.coverImageUrl} alt={editorialMain.title} loading="lazy" />
+                    ) : (
+                      <div className="w-full aspect-4/3 bg-[#F2F2F2]" />
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-xs tracking-[2px] text-textLight">{editorialMain.issue || 'EDITORIAL'}</span>
+                    <h3 className="text-lg md:text-xl mt-2">{editorialMain.title}</h3>
+                    <p className="mt-3 text-textLight">{editorialMain.excerpt}</p>
+                    <span className="inline-block mt-5 text-accent font-bold border-b border-accent">閱讀全文 →</span>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+
+              {editorialItems.length > 1 ? (
+                <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-textLight">
+                  {editorialItems
+                    .filter((a) => a.id !== editorialMain.id)
+                    .map((a) => (
+                      <Link key={a.id} className="hover:opacity-80 border-b border-border" to={`/articles/${a.slug}`}>
+                        {a.issue ? `${a.issue} · ` : ''}
+                        {a.title}
+                      </Link>
+                    ))}
+                </div>
+              ) : null}
+            </div>
           ) : (
             <div className="bg-white border border-border min-h-[200px] md:min-h-[240px] flex items-center justify-center px-6">
               <p className="text-textLight tracking-[0.2em] text-sm md:text-base">空空如也</p>
