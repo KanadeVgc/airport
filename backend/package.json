@@ -6,12 +6,12 @@
   "scripts": {
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
-    "postinstall": "prisma generate",
-    "prisma": "prisma",
-    "db:generate": "prisma generate",
-    "db:migrate": "prisma migrate dev",
-    "db:deploy": "prisma migrate deploy",
-    "db:fix-user-username": "prisma db execute --file prisma/migrations/20260415143000_user_add_username_column/migration.sql"
+    "prisma": "node ./node_modules/prisma/build/index.js",
+    "postinstall": "npm run prisma -- generate",
+    "db:generate": "npm run prisma -- generate",
+    "db:migrate": "npm run prisma -- migrate dev",
+    "db:deploy": "npm run prisma -- migrate deploy",
+    "db:fix-user-username": "npm run prisma -- db execute --file prisma/migrations/20260415143000_user_add_username_column/migration.sql"
   },
   "dependencies": {
     "cloudinary": "^2.5.1",
