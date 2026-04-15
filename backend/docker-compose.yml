@@ -1,0 +1,16 @@
+services:
+  db:
+    image: postgres:16
+    container_name: airport-postgres
+    environment:
+      POSTGRES_USER: airport
+      POSTGRES_PASSWORD: airport
+      POSTGRES_DB: airport
+    ports:
+      - "5432:5432"
+    volumes:
+      - airport_pgdata:/var/lib/postgresql/data
+
+volumes:
+  airport_pgdata:
+

@@ -1,0 +1,81 @@
+【CSS】
+:root {
+    --bg: #F7F3F0;
+    --text-main: #3C3633;
+    --text-light: #8E847E;
+    --accent: #B0927A;
+    --border: #E8E2DE;
+}
+
+body { margin: 0; font-family: 'Noto Sans TC', sans-serif; background: var(--bg); color: var(--text-main); line-height: 1.8; }
+h1, h2, h3, h4 { font-family: 'Noto Serif TC', serif; font-weight: 700; }
+.container { max-width: 1000px; margin: 0 auto; padding: 0 40px; }
+.hidden { display: none; }
+
+/* 導覽列 */
+nav { display: flex; justify-content: space-between; align-items: center; padding: 20px 5%; background: rgba(247,243,240,0.9); backdrop-filter: blur(10px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
+.logo-container { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+.logo-text { font-size: 1.4rem; font-weight: bold; letter-spacing: 2px; }
+.heartbeat-icon { width: 35px; height: 35px; animation: heartbeat 2s infinite ease-in-out; }
+@keyframes heartbeat { 0%, 100% { transform: scale(1); } 15% { transform: scale(1.1); } 30% { transform: scale(1.2); } }
+.nav-links { list-style: none; display: flex; gap: 30px; }
+.nav-links a { text-decoration: none; color: var(--text-main); font-size: 0.9rem; }
+
+/* 首頁白框 */
+.hero { padding: 60px 0; }
+.report-card { background: #fff; border: 1px solid var(--border); cursor: pointer; padding: 40px; transition: 0.3s; }
+.report-box-inner { display: grid; grid-template-columns: 1fr 1.2fr; gap: 40px; }
+.report-illustration img { width: 100%; }
+.read-more-link { display: inline-block; margin-top: 20px; color: var(--accent); font-weight: bold; border-bottom: 1px solid; }
+
+/* 專題列表：精確還原長寬比 */
+.features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 25px; align-items: start; padding-bottom: 100px; }
+.feature-card { background: #fff; border: 1px solid var(--border); cursor: pointer; transition: 0.4s; height: 100%; display: flex; flex-direction: column; }
+.card-img-wrapper { height: 230px; overflow: hidden; }
+.card-img-wrapper img { width: 100%; height: 100%; object-fit: cover; }
+.card-info { padding: 25px; flex-grow: 1; }
+.card-info h3 { font-size: 1.2rem; margin: 0 0 15px; }
+.card-info p { font-size: 0.85rem; color: var(--text-light); }
+
+/* --- 精確還原附檔 321962.jpg 的灰白長形視覺 --- */
+.feature-card.placeholder {
+    background: #fff;
+    cursor: default;
+    box-shadow: none !important;
+    transform: none !important;
+    min-height: 580px; /* 模擬附檔中纖長的比例 */
+}
+
+.placeholder-top {
+    height: 230px;
+    background: #F2F2F2; /* 淡淡的淺灰色區塊 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #D1D1D1; /* 極淡的文字色 */
+    letter-spacing: 3px;
+    font-size: 0.8rem;
+    font-weight: 300;
+}
+
+.feature-card.placeholder h3, 
+.feature-card.placeholder p {
+    color: #999 !important; /* 文字轉灰 */
+}
+
+/* --- 內文詳情頁底部 (還原 image_31f7da.png) --- */
+#detail-page { background: #fff; }
+.back-btn { background: none; border: none; font-size: 0.9rem; color: var(--text-light); padding: 40px 0; cursor: pointer; }
+.article-title { font-size: 2.6rem; text-align: center; margin-bottom: 50px; }
+.article-body { max-width: 700px; margin: 0 auto; font-size: 1.15rem; }
+.dropcap { float: left; font-size: 4rem; line-height: 1; margin-right: 15px; color: var(--accent); font-weight: bold; }
+
+.footer-divider { width: 100%; height: 1px; background: #eee; margin: 60px 0; }
+.footer-flex { display: grid; grid-template-columns: 2fr 1fr; gap: 50px; }
+.team-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+.member span { display: block; font-size: 0.8rem; color: var(--text-light); }
+.btn-stack { display: flex; flex-direction: column; gap: 12px; }
+.pdf-btn { text-decoration: none; border: 1px solid #333; color: #333; padding: 12px; text-align: center; font-size: 0.85rem; }
+.pdf-btn:hover { background: #333; color: #fff; }
+
+@media (max-width: 800px) { .features-grid, .footer-flex, .report-box-inner { grid-template-columns: 1fr; } }

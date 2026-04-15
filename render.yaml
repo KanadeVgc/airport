@@ -1,0 +1,13 @@
+# Render Blueprint：後端 API（根目錄為 backend/）
+# 在 Render 儀表板連結 Repo 後可偵測此檔，或手動建立 Web Service 並對照下方設定。
+services:
+  - type: web
+    name: airport-api
+    runtime: node
+    rootDir: backend
+    buildCommand: npm install && npm run db:deploy
+    startCommand: npm start
+    plan: free
+    envVars:
+      - key: NODE_VERSION
+        value: "20"

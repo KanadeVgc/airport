@@ -1,0 +1,32 @@
+{
+  "name": "airport-backend",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "node --watch src/server.js",
+    "start": "node src/server.js",
+    "postinstall": "prisma generate",
+    "prisma": "prisma",
+    "db:generate": "prisma generate",
+    "db:migrate": "prisma migrate dev",
+    "db:deploy": "prisma migrate deploy",
+    "db:fix-user-username": "prisma db execute --file prisma/migrations/20260415143000_user_add_username_column/migration.sql"
+  },
+  "dependencies": {
+    "cloudinary": "^2.5.1",
+    "@aws-sdk/client-s3": "^3.887.0",
+    "@aws-sdk/s3-request-presigner": "^3.887.0",
+    "@prisma/client": "^6.16.0",
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
+    "dotenv": "^16.6.1",
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.1",
+    "multer": "^2.1.1",
+    "slugify": "^1.6.6",
+    "zod": "^4.1.5",
+    "prisma": "^6.16.0"
+  }
+}

@@ -1,0 +1,40 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg: #F7F3F0;
+    --text-main: #3C3633;
+    --text-light: #8E847E;
+    --accent: #B0927A;
+    --border: #E8E2DE;
+  }
+
+  body {
+    margin: 0;
+    font-family: "Noto Sans TC", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text-main);
+    line-height: 1.8;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: "Noto Serif TC", serif;
+    font-weight: 700;
+  }
+}
+
+@layer components {
+  .dropcap {
+    float: left;
+    font-size: 4rem;
+    line-height: 1;
+    margin-right: 15px;
+    color: var(--accent);
+    font-weight: 700;
+    font-family: "Noto Serif TC", serif;
+  }
+}
+

@@ -1,0 +1,139 @@
+【html】
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>日常皺褶 | 數位時代的感官觀察</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;700&family=Noto+Sans+TC:wght@300;400&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav>
+        <div class="logo-container" onclick="showMain()">
+            <svg class="heartbeat-icon" viewBox="0 0 150 150">
+                <path d="M10,75 L40,75 L50,45 L70,105 L85,60 L95,75 L140,75" 
+                      stroke="var(--accent)" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <span class="logo-text">日常皺褶</span>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#" onclick="showMain()">首頁</a></li>
+            <li><a href="#features-section">專題報導</a></li>
+        </ul>
+    </nav>
+
+    <main id="main-content">
+        <section class="hero">
+            <div class="container">
+                <h2 class="section-title">編輯室報告書</h2>
+                <div class="report-card" onclick="showReport()">
+                    <div class="report-box-inner">
+                        <div class="report-illustration">
+                            <img src="https://images.unsplash.com/photo-1493612276216-ee3925520721?auto=format&fit=crop&q=80&w=800" alt="編輯室報告插圖">
+                        </div>
+                        <div class="report-text-preview">
+                            <span class="meta">EDITORIAL REPORT</span>
+                            <h3>《日常的皺褶》創刊編輯室報告</h3>
+                            <p>當 AI 與數位工具加速了效率，我們卻逐漸失去了實體按鍵的回饋感與緩慢思考的空間。「日常皺褶」是一個實驗性的編輯空間，翻開那些被效率所「燙平」的感官遺失...</p>
+                            <span class="read-more-link">閱讀全文 →</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="features-section" class="features">
+            <div class="container">
+                <h2 class="section-title">專題報導</h2>
+                <div class="features-grid">
+                    <div class="feature-card" onclick="showArticle()">
+                        <div class="card-img-wrapper">
+                            <img src="https://images.unsplash.com/photo-1496171367470-9ed9a91ea931?auto=format&fit=crop&q=80&w=800" alt="數位皺褶專題">
+                        </div>
+                        <div class="card-info">
+                            <span class="category">ISSUE 01</span>
+                            <h3>數位皺褶：高效背後的感知流失</h3>
+                            <p>從打字機到雲端協作，軟體的演進如何改變了我們的勞動姿勢？</p>
+                        </div>
+                    </div>
+                    <div class="feature-card placeholder">
+                        <div class="card-img-wrapper"><div class="placeholder-box">COMING SOON</div></div>
+                        <div class="card-info"><h3>主題二：籌備中</h3></div>
+                    </div>
+                    <div class="feature-card placeholder">
+                        <div class="card-img-wrapper"><div class="placeholder-box">COMING SOON</div></div>
+                        <div class="card-info"><h3>主題三：籌備中</h3></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="detail-page" class="hidden">
+        <div class="container">
+            <button class="back-btn" onclick="showMain()">← 返回首頁</button>
+            
+            <article id="report-full" class="hidden">
+                <div class="article-header">
+                    <h1>《日常的皺褶》創刊編輯室報告</h1>
+                </div>
+                <div class="article-body">
+                    <p class="dropcap">我</p><p>們每天享受科技帶來的「便利」，卻鮮少質疑這些「直覺」是由誰定義的。當滑動、縮放、點擊被標榜為「自然操作」時，我們其實正被捲入一種特定的行為框架中。《日常的皺褶》是為了將對「好用」的理所當然先行擱置。</p>
+                    
+                    <div class="content-section">
+                        <h4>一、 關注點與視角</h4>
+                        <ul class="styled-list">
+                            <li><strong>人機互動媒介的演化史：</strong> 從命令列 (CLI) 到 AI 時代技術的「平滑化」。</li>
+                            <li><strong>權力關係的解構：</strong> 拆解隱藏在流暢介面底下的行為框架。</li>
+                            <li><strong>感官剝奪與失落：</strong> 審視科技發展是否導致人類自然本能的退化。</li>
+                        </ul>
+                    </div>
+
+                    <div class="content-section">
+                        <h4>二、 為什麼創辦？</h4>
+                        <p>我們要去挖掘那些隱藏在流暢介面下的權力移轉：人類是為了便利而適應機器，還是在適應機器的過程中，逐漸喪失了對真實世界的感官連結？</p>
+                    </div>
+                </div>
+            </article>
+
+            <article id="article1-full" class="hidden">
+                <div class="video-container">
+                    <video controls poster="https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&q=80&w=1200">
+                        <source src="《日常皺褶》.mp4" type="video/mp4">
+                    </video>
+                </div>
+                <div class="article-body">
+                    <h1>數位皺褶：高效背後的感知流失</h1>
+                    <p>現代白領每 11 分鐘就會面臨一次數位通知的干擾。當我們習慣了「Ctrl+Z」的便捷，現實生活中的決策溫度也隨之變得輕薄。我們在尋找的，是那些在效率化過程中被熨平的、真實的生活紋理。</p>
+                </div>
+
+                <footer class="detail-footer">
+                    <div class="footer-divider"></div>
+                    <div class="footer-flex-row">
+                        <div class="team-block">
+                            <h4>編輯團隊 / 製作名單</h4>
+                            <div class="team-grid">
+                                <div class="member"><span>主編</span><strong>WEI</strong></div>
+                                <div class="member"><span>敘事</span><strong>陳組員</strong></div>
+                                <div class="member"><span>AI 紀錄官</span><strong>林組員</strong></div>
+                                <div class="member"><span>視覺設計</span><strong>張組員</strong></div>
+                            </div>
+                        </div>
+                        <div class="download-block">
+                            <h4>研究附錄</h4>
+                            <div class="btn-group">
+                                <a href="#" class="pdf-btn">AI 記錄 PDF</a>
+                                <a href="#" class="pdf-btn">訪問內容整理 PDF</a>
+                            </div>
+                        </div>
+                    </div>
+                </footer>
+            </article>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
