@@ -130,6 +130,7 @@ app.get('/articles', async (req, res) => {
       coverImageUrl: true,
       issue: true,
       status: true,
+      section: true,
       publishedAt: true,
     },
   })
@@ -177,6 +178,7 @@ const ArticleUpsertSchema = z.object({
   videoUrl: optionalHttpUrl,
   issue: z.string().optional().nullable(),
   status: z.enum(['DRAFT', 'PUBLISHED', 'ARCHIVED']).default('DRAFT'),
+  section: z.enum(['EDITORIAL', 'FEATURE']).default('FEATURE'),
   slug: z.string().optional().nullable(),
 })
 
@@ -220,6 +222,7 @@ app.post('/admin/articles', requireAuth, requireRole(['ADMIN', 'EDITOR']), async
         videoUrl: data.videoUrl ?? null,
         issue: data.issue ?? null,
         status: data.status,
+        section: data.section,
         publishedAt,
       },
     })
@@ -256,6 +259,7 @@ app.put('/admin/articles/:id', requireAuth, requireRole(['ADMIN', 'EDITOR']), as
         videoUrl: data.videoUrl ?? null,
         issue: data.issue ?? null,
         status: data.status,
+        section: data.section,
         publishedAt,
       },
     })

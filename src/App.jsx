@@ -73,10 +73,15 @@ function Home() {
   if (status === 'loading') return <LoadingBlock />
   if (status === 'error') return <ErrorBlock error={error} />
 
-  const first = items[0]
-  const rest = items.slice(1)
-  // 第二篇起放專題；若全站只有一篇，專題區仍顯示該篇（一張卡片即可）
-  const featureArticles = rest.length > 0 ? rest : first ? [first] : []
+  const editorialItems = items.filter((a) => a.section === 'EDITORIAL')
+  const featureItems = items.filter((a) => a.section !== 'EDITORIAL')
+
+  // 若沒有任何文章被標成「編輯室報告書」，則用最新一篇頂上（避免首頁空掉）
+  const editorialMain = editorialItems[0] || items[0] || null
+  const featureArticles =
+    featureItems.length > 0
+      ? featureItems.filter((a) => a?.id !== editorialMain?.id)
+      : items.filter((a) => a?.id !== editorialMain?.id)
 
   return (
     <main>
@@ -84,23 +89,23 @@ function Home() {
         <Container>
           <SectionTitle>編輯室報告書</SectionTitle>
 
-          {first ? (
+          {editorialMain ? (
             <Link
-              to={`/articles/${first.slug}`}
+              to={`/articles/${editorialMain.slug}`}
               className="block bg-white border border-border cursor-pointer p-7 md:p-10 transition hover:shadow-sm"
             >
               <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 md:gap-10">
                 <div>
-                  {first.coverImageUrl ? (
-                    <img className="w-full" src={first.coverImageUrl} alt={first.title} loading="lazy" />
+                  {editorialMain.coverImageUrl ? (
+                    <img className="w-full" src={editorialMain.coverImageUrl} alt={editorialMain.title} loading="lazy" />
                   ) : (
                     <div className="w-full aspect-4/3 bg-[#F2F2F2]" />
                   )}
                 </div>
                 <div>
-                  <span className="text-xs tracking-[2px] text-textLight">{first.issue || 'EDITORIAL'}</span>
-                  <h3 className="text-lg md:text-xl mt-2">{first.title}</h3>
-                  <p className="mt-3 text-textLight">{first.excerpt}</p>
+                  <span className="text-xs tracking-[2px] text-textLight">{editorialMain.issue || 'EDITORIAL'}</span>
+                  <h3 className="text-lg md:text-xl mt-2">{editorialMain.title}</h3>
+                  <p className="mt-3 text-textLight">{editorialMain.excerpt}</p>
                   <span className="inline-block mt-5 text-accent font-bold border-b border-accent">閱讀全文 →</span>
                 </div>
               </div>
@@ -388,6 +393,7 @@ function AdminEditor({ mode }) {
     title: '',
     excerpt: '',
     issue: '',
+    section: 'FEATURE',
     status: 'DRAFT',
     coverImageUrl: '',
     videoUrl: '',
@@ -409,6 +415,7 @@ function AdminEditor({ mode }) {
           title: r.title || '',
           excerpt: r.excerpt || '',
           issue: r.issue || '',
+          section: r.section || 'FEATURE',
           status: r.status || 'DRAFT',
           coverImageUrl: r.coverImageUrl || '',
           videoUrl: r.videoUrl || '',
@@ -483,6 +490,10 @@ function AdminEditor({ mode }) {
             <div className="space-y-4">
               <input className="w-full border border-border px-3 py-2" placeholder="標題" value={form.title} onChange={set('title')} />
               <input className="w-full border border-border px-3 py-2" placeholder="期數/分類（例如 ISSUE 01）" value={form.issue} onChange={set('issue')} />
+              <select className="w-full border border-border px-3 py-2" value={form.section} onChange={set('section')}>
+                <option value="EDITORIAL">編輯室報告書</option>
+                <option value="FEATURE">專題報導</option>
+              </select>
               <input className="w-full border border-border px-3 py-2" placeholder="slug（可留空自動）" value={form.slug} onChange={set('slug')} />
               <select className="w-full border border-border px-3 py-2" value={form.status} onChange={set('status')}>
                 <option value="DRAFT">DRAFT</option>
@@ -557,6 +568,7 @@ function AdminEditor({ mode }) {
                       title: titleTrim,
                       excerpt: form.excerpt,
                       issue: form.issue || null,
+                      section: form.section,
                       status: form.status,
                       coverImageUrl: form.coverImageUrl || null,
                       videoUrl: form.videoUrl || null,
