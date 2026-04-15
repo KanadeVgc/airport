@@ -86,7 +86,7 @@ function Home() {
 
           {first ? (
             <Link
-              to={`/articles/${first.slug}/intro`}
+              to={`/articles/${first.slug}`}
               className="block bg-white border border-border cursor-pointer p-7 md:p-10 transition hover:shadow-sm"
             >
               <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 md:gap-10">
@@ -118,7 +118,7 @@ function Home() {
           <Container>
             <SectionTitle>專題報導</SectionTitle>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+            <div className="grid grid-cols-1 md:grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-6 items-start">
               {featureArticles.map((a) => (
                 <Link
                   key={a.id}
@@ -177,49 +177,8 @@ function useArticle(slug) {
 
 function ArticleIntro() {
   const { slug } = useParams()
-  const { row, status, error } = useArticle(slug)
-  if (status === 'loading') return <LoadingBlock />
-  if (status === 'error') return <ErrorBlock error={error} />
-
-  return (
-    <div className="bg-white min-h-[calc(100vh-80px)]">
-      <Container>
-        <Link className="inline-block text-[0.9rem] text-textLight py-10 hover:opacity-80" to="/">
-          ← 返回首頁
-        </Link>
-
-        <article>
-          <div className="border border-border">
-            <div className="p-7 md:p-10">
-              <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 md:gap-10">
-                <div>
-                  {row.coverImageUrl ? (
-                    <img className="w-full" src={row.coverImageUrl} alt={row.title} loading="lazy" />
-                  ) : (
-                    <div className="w-full aspect-4/3 bg-[#F2F2F2]" />
-                  )}
-                </div>
-                <div className="flex flex-col">
-                  <span className="text-xs tracking-[2px] text-textLight">{row.issue || 'INTRO'}</span>
-                  <h1 className="text-2xl md:text-[2.2rem] mt-2">{row.title}</h1>
-                  <p className="mt-4 text-textLight">{row.excerpt}</p>
-
-                  <div className="mt-6">
-                    <Link
-                      to={`/articles/${row.slug}`}
-                      className="inline-flex items-center gap-2 text-textMain font-semibold border-b border-textMain hover:opacity-80"
-                    >
-                      閱讀全文 <span aria-hidden>→</span>
-                    </Link>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </article>
-      </Container>
-    </div>
-  )
+  // 目前「引導頁」內容與首頁重疊；保留路由相容性但直接導向全文
+  return <Navigate to={`/articles/${encodeURIComponent(slug || '')}`} replace />
 }
 
 function ArticleFull() {
@@ -231,8 +190,8 @@ function ArticleFull() {
   return (
     <div className="bg-white min-h-[calc(100vh-80px)]">
       <Container>
-        <Link className="inline-block text-[0.9rem] text-textLight py-10 hover:opacity-80" to={`/articles/${row.slug}/intro`}>
-          ← 返回引導頁
+        <Link className="inline-block text-[0.9rem] text-textLight py-10 hover:opacity-80" to="/">
+          ← 返回首頁
         </Link>
 
         <article>
@@ -477,6 +436,16 @@ function AdminEditor({ mode }) {
 
   const useR2Presign = import.meta.env.VITE_STORAGE_DRIVER === 'r2'
 
+  function isValidHttpUrl(s) {
+    if (!s) return true
+    try {
+      const u = new URL(String(s))
+      return u.protocol === 'http:' || u.protocol === 'https:'
+    } catch {
+      return false
+    }
+  }
+
   async function doPresignedUpload(file, kind) {
     if (!useR2Presign) {
       const data = await api.uploadFileLocal(file, kind, token)
@@ -574,8 +543,18 @@ function AdminEditor({ mode }) {
                 onClick={async () => {
                   try {
                     setError(null)
+                    const titleTrim = form.title.trim()
+                    if (!titleTrim) {
+                      throw new Error('請先輸入標題（title 必填）')
+                    }
+                    if (!isValidHttpUrl(form.coverImageUrl.trim())) {
+                      throw new Error('封面圖網址不是合法的 http/https URL（可留空）')
+                    }
+                    if (!isValidHttpUrl(form.videoUrl.trim())) {
+                      throw new Error('影片網址不是合法的 http/https URL（可留空）')
+                    }
                     const payload = {
-                      title: form.title,
+                      title: titleTrim,
                       excerpt: form.excerpt,
                       issue: form.issue || null,
                       status: form.status,
