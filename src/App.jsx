@@ -232,38 +232,96 @@ function ArticleIntro() {
 function ArticleFull() {
   const { slug } = useParams()
   const { row, status, error } = useArticle(slug)
+  const [more, setMore] = useState([])
+
+  useEffect(() => {
+    let cancelled = false
+    api
+      .listArticles()
+      .then((rows) => {
+        if (cancelled) return
+        const list = Array.isArray(rows) ? rows : []
+        setMore(list.filter((a) => a?.slug && a.slug !== slug).slice(0, 8))
+      })
+      .catch(() => {
+        if (cancelled) return
+        setMore([])
+      })
+    return () => {
+      cancelled = true
+    }
+  }, [slug])
+
   if (status === 'loading') return <LoadingBlock />
   if (status === 'error') return <ErrorBlock error={error} />
+
+  const heroUrl = row.videoUrl || row.coverImageUrl
+  const isVideo = Boolean(row.videoUrl)
 
   return (
     <div className="bg-white min-h-[calc(100vh-80px)]">
       <Container>
-        <Link className="inline-block text-[0.9rem] text-textLight py-10 hover:opacity-80" to="/">
+        <Link className="inline-block text-[0.9rem] text-textLight py-8 hover:opacity-80" to="/">
           ← 返回首頁
         </Link>
 
-        <article>
-          <div className="text-center mb-10 md:mb-12">
-            <h1 className="text-3xl md:text-[2.6rem]">{row.title}</h1>
-          </div>
-
-          {row.videoUrl ? (
-            <div className="max-w-[1000px] mx-auto mb-10">
-              <div className="w-full overflow-hidden rounded-sm">
-                <video controls className="w-full">
+        <article className="pb-20">
+          {heroUrl ? (
+            <div className="border border-border bg-white mb-8 overflow-hidden">
+              {isVideo ? (
+                <video controls className="w-full max-h-[520px] object-cover bg-black">
                   <source src={row.videoUrl} />
                 </video>
-              </div>
+              ) : (
+                <img className="w-full max-h-[520px] object-cover" src={row.coverImageUrl} alt={row.title} loading="lazy" />
+              )}
             </div>
           ) : null}
 
-          <div className="max-w-[700px] mx-auto text-[1.05rem] md:text-[1.15rem]">
-            {row.introMarkdown ? (
-              <div className="mb-8 text-textLight">
-                <ReactMarkdown>{row.introMarkdown}</ReactMarkdown>
-              </div>
+          <header className="mb-8 max-w-[1000px] mx-auto">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-2 text-xs tracking-[2px] text-textLight">
+              <span className="uppercase">{row.issue || 'ARTICLE'}</span>
+              <span aria-hidden>·</span>
+              <span className="uppercase">{row.section === 'EDITORIAL' ? 'EDITORIAL' : 'FEATURE'}</span>
+            </div>
+            <h1 className="text-3xl md:text-[2.6rem] leading-tight mt-3">{row.title}</h1>
+            {row.excerpt ? (
+              <p className="mt-4 text-[1.05rem] md:text-[1.15rem] text-textLight leading-relaxed">{row.excerpt}</p>
             ) : null}
-            <ReactMarkdown>{row.bodyMarkdown}</ReactMarkdown>
+          </header>
+
+          <div className="max-w-[1000px] mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-10 items-start">
+            <div className="min-w-0">
+              {row.introMarkdown ? (
+                <div className="mb-8 p-5 border border-border bg-[rgba(247,243,240,0.7)] text-textMain">
+                  <div className="text-sm tracking-[2px] text-textLight mb-2">導讀</div>
+                  <div className="prose max-w-none text-[1.02rem] md:text-[1.08rem] leading-relaxed">
+                    <ReactMarkdown>{row.introMarkdown}</ReactMarkdown>
+                  </div>
+                </div>
+              ) : null}
+
+              <div className="prose max-w-none text-[1.05rem] md:text-[1.15rem] leading-relaxed">
+                <ReactMarkdown>{row.bodyMarkdown}</ReactMarkdown>
+              </div>
+            </div>
+
+            {more.length > 0 ? (
+              <aside className="border border-border bg-white">
+                <div className="px-5 py-4 border-b border-border">
+                  <div className="text-sm tracking-[2px] text-textLight">其他文章</div>
+                </div>
+                <div className="divide-y divide-border">
+                  {more.map((a) => (
+                    <Link key={a.id} to={`/articles/${a.slug}`} className="block px-5 py-4 hover:bg-[rgba(247,243,240,0.7)] transition">
+                      <div className="text-xs tracking-[2px] text-textLight">{a.issue || (a.section === 'EDITORIAL' ? 'EDITORIAL' : 'FEATURE')}</div>
+                      <div className="mt-1 font-semibold">{a.title}</div>
+                      {a.excerpt ? <div className="mt-2 text-sm text-textLight line-clamp-2">{a.excerpt}</div> : null}
+                    </Link>
+                  ))}
+                </div>
+              </aside>
+            ) : null}
           </div>
         </article>
       </Container>
