@@ -101,57 +101,72 @@ function Home() {
 
           {editorialMain ? (
             <div className="space-y-4">
-              {editorialItems.length > 1 ? (
-                <div className="flex items-center gap-3">
-                  <div className="text-sm text-textLight">選擇文章</div>
-                  <select
-                    className="border border-border px-3 py-2 bg-white"
-                    value={editorialSlug || editorialItems[0]?.slug || ''}
-                    onChange={(e) => setEditorialSlug(e.target.value)}
-                  >
-                    {editorialItems.map((a) => (
-                      <option key={a.id} value={a.slug}>
-                        {a.issue ? `${a.issue} · ` : ''}
-                        {a.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              ) : null}
-
-              <Link
-                to={`/articles/${editorialMain.slug}`}
-                className="block bg-white border border-border cursor-pointer p-7 md:p-10 transition hover:shadow-sm"
-              >
-                <div className="grid grid-cols-1 md:grid-cols-[1fr_1.2fr] gap-8 md:gap-10">
-                  <div>
+              <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-6 items-start">
+                <Link
+                  to={`/articles/${editorialMain.slug}`}
+                  className="block bg-white border border-border overflow-hidden hover:shadow-sm transition"
+                >
+                  <div className="relative">
                     {editorialMain.coverImageUrl ? (
-                      <img className="w-full" src={editorialMain.coverImageUrl} alt={editorialMain.title} loading="lazy" />
+                      <img
+                        className="w-full h-[260px] md:h-[360px] object-cover"
+                        src={editorialMain.coverImageUrl}
+                        alt={editorialMain.title}
+                        loading="lazy"
+                      />
                     ) : (
-                      <div className="w-full aspect-4/3 bg-[#F2F2F2]" />
+                      <div className="w-full h-[260px] md:h-[360px] bg-[#F2F2F2]" />
                     )}
+                    <div className="absolute inset-0 bg-linear-to-t from-[rgba(0,0,0,0.55)] via-[rgba(0,0,0,0.15)] to-transparent" />
+                    <div className="absolute left-0 right-0 bottom-0 p-5 md:p-7 text-white">
+                      <div className="text-xs tracking-[2px] opacity-90">{editorialMain.issue || 'EDITORIAL'}</div>
+                      <div className="mt-2 text-2xl md:text-3xl font-semibold leading-tight">{editorialMain.title}</div>
+                      {editorialMain.excerpt ? (
+                        <div className="mt-3 text-sm md:text-base opacity-90 line-clamp-2">{editorialMain.excerpt}</div>
+                      ) : null}
+                      <div className="mt-4 inline-flex items-center gap-2 text-sm font-semibold border-b border-white/80">
+                        閱讀全文 <span aria-hidden>→</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <span className="text-xs tracking-[2px] text-textLight">{editorialMain.issue || 'EDITORIAL'}</span>
-                    <h3 className="text-lg md:text-xl mt-2">{editorialMain.title}</h3>
-                    <p className="mt-3 text-textLight">{editorialMain.excerpt}</p>
-                    <span className="inline-block mt-5 text-accent font-bold border-b border-accent">閱讀全文 →</span>
-                  </div>
-                </div>
-              </Link>
+                </Link>
 
-              {editorialItems.length > 1 ? (
-                <div className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-textLight">
-                  {editorialItems
-                    .filter((a) => a.id !== editorialMain.id)
-                    .map((a) => (
-                      <Link key={a.id} className="hover:opacity-80 border-b border-border" to={`/articles/${a.slug}`}>
-                        {a.issue ? `${a.issue} · ` : ''}
-                        {a.title}
+                <aside className="border border-border bg-white">
+                  <div className="px-5 py-4 border-b border-border flex items-center justify-between gap-3">
+                    <div className="text-sm tracking-[2px] text-textLight">其他報告書</div>
+                    {editorialItems.length > 1 ? (
+                      <select
+                        className="border border-border px-2 py-1 bg-white text-sm"
+                        value={editorialSlug || editorialItems[0]?.slug || ''}
+                        onChange={(e) => setEditorialSlug(e.target.value)}
+                        aria-label="選擇編輯室報告書"
+                      >
+                        {editorialItems.map((a) => (
+                          <option key={a.id} value={a.slug}>
+                            {a.issue ? `${a.issue} · ` : ''}
+                            {a.title}
+                          </option>
+                        ))}
+                      </select>
+                    ) : null}
+                  </div>
+                  <div className="divide-y divide-border">
+                    {editorialItems.map((a) => (
+                      <Link
+                        key={a.id}
+                        to={`/articles/${a.slug}`}
+                        className={`block px-5 py-4 hover:bg-[rgba(247,243,240,0.7)] transition ${
+                          a.id === editorialMain.id ? 'bg-[rgba(247,243,240,0.7)]' : ''
+                        }`}
+                      >
+                        <div className="text-xs tracking-[2px] text-textLight">{a.issue || 'EDITORIAL'}</div>
+                        <div className="mt-1 font-semibold leading-snug">{a.title}</div>
+                        {a.excerpt ? <div className="mt-2 text-sm text-textLight line-clamp-2">{a.excerpt}</div> : null}
                       </Link>
                     ))}
-                </div>
-              ) : null}
+                  </div>
+                </aside>
+              </div>
             </div>
           ) : (
             <div className="bg-white border border-border min-h-[200px] md:min-h-[240px] flex items-center justify-center px-6">
