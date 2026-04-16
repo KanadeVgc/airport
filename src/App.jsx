@@ -306,7 +306,11 @@ function ArticleFull() {
             ) : null}
           </header>
 
-          <div className="max-w-[1000px] mx-auto grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_320px] gap-10 items-start">
+          <div
+            className={`max-w-[1000px] mx-auto grid grid-cols-1 gap-10 items-start ${
+              more.length > 0 ? 'lg:grid-cols-[minmax(0,1fr)_320px]' : ''
+            }`}
+          >
             <div className="min-w-0">
               {row.introMarkdown ? (
                 <div className="mb-8 p-5 border border-border bg-[rgba(247,243,240,0.7)] text-textMain">
