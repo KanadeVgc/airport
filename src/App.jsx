@@ -315,14 +315,18 @@ function ArticleFull() {
               {row.introMarkdown ? (
                 <div className="mb-10">
                   <div className="text-sm tracking-[2px] text-textLight mb-2">導讀</div>
-                  <div className="prose article-prose article-lead text-[1.02rem] md:text-[1.08rem] leading-relaxed">
-                    <ReactMarkdown>{row.introMarkdown}</ReactMarkdown>
+                  <div className="w-full max-w-[720px] mx-auto">
+                    <div className="prose article-prose article-lead text-[1.02rem] md:text-[1.08rem] leading-relaxed">
+                      <ReactMarkdown>{row.introMarkdown}</ReactMarkdown>
+                    </div>
                   </div>
                 </div>
               ) : null}
 
-              <div className="prose article-prose text-[1.05rem] md:text-[1.15rem] leading-relaxed">
-                <ReactMarkdown>{row.bodyMarkdown}</ReactMarkdown>
+              <div className="w-full max-w-[720px] mx-auto">
+                <div className="prose article-prose text-[1.05rem] md:text-[1.15rem] leading-relaxed">
+                  <ReactMarkdown>{row.bodyMarkdown}</ReactMarkdown>
+                </div>
               </div>
             </div>
 
@@ -757,8 +761,10 @@ function AdminEditor({ mode }) {
               />
               <div className="min-w-0 overflow-x-auto">
                 <div className="text-sm text-textLight mb-2">預覽（不可編輯）</div>
-                <div className="prose article-prose">
-                  <ReactMarkdown>{form.bodyMarkdown || '_（尚無內容）_'}</ReactMarkdown>
+                <div className="w-full max-w-[720px] mx-auto">
+                  <div className="prose article-prose">
+                    <ReactMarkdown>{form.bodyMarkdown || '_（尚無內容）_'}</ReactMarkdown>
+                  </div>
                 </div>
               </div>
             </div>
