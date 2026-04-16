@@ -622,7 +622,7 @@ function AdminEditor({ mode }) {
           <h1 className="text-2xl mb-6">{mode === 'edit' ? '編輯文章' : '新增文章'}</h1>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <div className="space-y-4">
+            <div className="space-y-4 min-w-0">
               <input className="w-full border border-border px-3 py-2" placeholder="標題" value={form.title} onChange={set('title')} />
               <input className="w-full border border-border px-3 py-2" placeholder="期數/分類（例如 ISSUE 01）" value={form.issue} onChange={set('issue')} />
               <select className="w-full border border-border px-3 py-2" value={form.section} onChange={set('section')}>
@@ -736,7 +736,7 @@ function AdminEditor({ mode }) {
               {error ? <div className="text-red-700 text-sm">錯誤：{error.message}</div> : null}
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 min-w-0">
               <textarea
                 className="w-full border border-border px-3 py-2 min-h-[140px]"
                 placeholder="引導頁 Markdown（可選）"
@@ -749,9 +749,11 @@ function AdminEditor({ mode }) {
                 value={form.bodyMarkdown}
                 onChange={set('bodyMarkdown')}
               />
-              <div className="border border-border p-4">
+              <div className="border border-border p-4 min-w-0 overflow-x-auto">
                 <div className="text-sm text-textLight mb-2">預覽</div>
-                <ReactMarkdown>{form.bodyMarkdown || '_（尚無內容）_'}</ReactMarkdown>
+                <div className="prose max-w-none wrap-break-word">
+                  <ReactMarkdown>{form.bodyMarkdown || '_（尚無內容）_'}</ReactMarkdown>
+                </div>
               </div>
             </div>
           </div>
