@@ -315,13 +315,13 @@ function ArticleFull() {
               {row.introMarkdown ? (
                 <div className="mb-8 p-5 border border-border bg-[rgba(247,243,240,0.7)] text-textMain">
                   <div className="text-sm tracking-[2px] text-textLight mb-2">導讀</div>
-                  <div className="prose max-w-none text-[1.02rem] md:text-[1.08rem] leading-relaxed">
+                  <div className="prose max-w-none article-prose text-[1.02rem] md:text-[1.08rem] leading-relaxed">
                     <ReactMarkdown>{row.introMarkdown}</ReactMarkdown>
                   </div>
                 </div>
               ) : null}
 
-              <div className="prose max-w-none text-[1.05rem] md:text-[1.15rem] leading-relaxed">
+              <div className="prose max-w-none article-prose text-[1.05rem] md:text-[1.15rem] leading-relaxed">
                 <ReactMarkdown>{row.bodyMarkdown}</ReactMarkdown>
               </div>
             </div>

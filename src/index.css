@@ -36,5 +36,33 @@
     font-weight: 700;
     font-family: "Noto Serif TC", serif;
   }
+
+  /* 報導式正文排版（前台文章用） */
+  .article-prose {
+    text-align: justify;
+    text-justify: inter-ideograph;
+    word-break: break-word;
+    overflow-wrap: anywhere;
+  }
+
+  .article-prose p {
+    margin: 1.05em 0;
+    text-indent: 2em;
+  }
+
+  .article-prose :is(ul, ol) {
+    margin: 1em 0;
+    padding-left: 1.5em;
+  }
+
+  .article-prose :is(ul, ol) p {
+    text-indent: 0;
+    margin: 0.4em 0;
+  }
+
+  .article-prose :is(blockquote, pre, table, hr) {
+    text-align: left;
+    text-indent: 0;
+  }
 }
 
