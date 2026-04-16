@@ -38,7 +38,7 @@
   }
 
   /* 報導式正文排版（前台文章用） */
-  .article-prose {
+  .prose.article-prose {
     /* 中文兩端對齊在部分瀏覽器會拉開字距，影響閱讀；採左對齊 + 控制行長 */
     text-align: left;
     word-break: break-word;
@@ -50,38 +50,38 @@
     margin-right: auto;
   }
 
-  .article-prose p {
+  .prose.article-prose p {
     margin: 1.05em 0;
     text-indent: 0;
   }
 
   /* 新聞常見：第一段不縮排，後續段落才縮排 */
-  .article-prose p + p {
+  .prose.article-prose p + p {
     text-indent: 2em;
   }
 
-  .article-prose :is(h1, h2, h3, h4, h5, h6) {
+  .prose.article-prose :is(h1, h2, h3, h4, h5, h6) {
     text-align: left;
     text-indent: 0;
   }
 
-  .article-prose :is(ul, ol) {
+  .prose.article-prose :is(ul, ol) {
     margin: 1em 0;
     padding-left: 1.5em;
   }
 
-  .article-prose :is(ul, ol) p {
+  .prose.article-prose :is(ul, ol) p {
     text-indent: 0;
     margin: 0.4em 0;
   }
 
-  .article-prose :is(blockquote, pre, table, hr) {
+  .prose.article-prose :is(blockquote, pre, table, hr) {
     text-align: left;
     text-indent: 0;
   }
 
   /* 導語/導讀（新聞常見開場） */
-  .article-lead {
+  .prose.article-prose.article-lead {
     text-indent: 0;
     font-weight: 600;
     letter-spacing: 0.2px;
