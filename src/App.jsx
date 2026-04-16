@@ -639,11 +639,17 @@ function AdminEditor({ mode }) {
 
               <div className="space-y-2">
                 <div className="text-sm text-textLight">封面圖</div>
-                <div className="flex gap-3 items-center">
-                  <input className="w-full border border-border px-3 py-2" placeholder="coverImageUrl" value={form.coverImageUrl} onChange={set('coverImageUrl')} />
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                  <input
+                    className="w-full min-w-0 border border-border px-3 py-2"
+                    placeholder="coverImageUrl"
+                    value={form.coverImageUrl}
+                    onChange={set('coverImageUrl')}
+                  />
                   <input
                     type="file"
                     accept="image/*"
+                    className="shrink-0 w-full sm:w-auto"
                     onChange={async (e) => {
                       const f = e.target.files?.[0]
                       if (!f) return
@@ -662,11 +668,17 @@ function AdminEditor({ mode }) {
 
               <div className="space-y-2">
                 <div className="text-sm text-textLight">影片（可選）</div>
-                <div className="flex gap-3 items-center">
-                  <input className="w-full border border-border px-3 py-2" placeholder="videoUrl" value={form.videoUrl} onChange={set('videoUrl')} />
+                <div className="flex flex-col sm:flex-row gap-3 sm:items-center">
+                  <input
+                    className="w-full min-w-0 border border-border px-3 py-2"
+                    placeholder="videoUrl"
+                    value={form.videoUrl}
+                    onChange={set('videoUrl')}
+                  />
                   <input
                     type="file"
                     accept="video/*"
+                    className="shrink-0 w-full sm:w-auto"
                     onChange={async (e) => {
                       const f = e.target.files?.[0]
                       if (!f) return

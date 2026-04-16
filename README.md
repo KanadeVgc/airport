@@ -41,6 +41,7 @@ npm run dev
   - `local`：檔案存在 `backend/uploads/`，由後端 `http://localhost:8787/uploads/...` 提供（開發不必設定 R2）
   - `r2`：使用 Cloudflare R2 / S3 預簽名，並在專案根 `.env` 設 `VITE_STORAGE_DRIVER=r2` 讓前端走預簽名流程
   - `cloudinary`：後端 `POST /admin/uploads/file` 接收 multipart 後上傳 Cloudinary；**前端不要**設 `VITE_STORAGE_DRIVER=r2`
+- **UPLOAD_MAX_BYTES**：multipart 上傳大小上限（bytes，預設約 120MB）。大檔影片建議改用 `STORAGE_DRIVER=r2`（預簽名直傳）或調大此值（但後端採 memory upload，過大可能佔用較多記憶體）。
 - **API_PUBLIC_URL**：`STORAGE_DRIVER=local` 時，給瀏覽器組圖片網址用（預設 `http://localhost:8787`）
 - **S3/R2**（僅當 `STORAGE_DRIVER=r2`）
   - `S3_ENDPOINT`、`S3_BUCKET`、`S3_ACCESS_KEY_ID`、`S3_SECRET_ACCESS_KEY`、`S3_PUBLIC_BASE_URL`

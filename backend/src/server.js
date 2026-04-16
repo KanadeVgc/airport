@@ -279,9 +279,15 @@ app.delete('/admin/articles/:id', requireAuth, requireRole(['ADMIN', 'EDITOR']),
 })
 
 // --- 上傳：local（multipart）或 R2/S3 預簽名 ---
+const uploadMaxBytes = (() => {
+  const raw = process.env.UPLOAD_MAX_BYTES
+  const n = raw ? Number(raw) : NaN
+  return Number.isFinite(n) && n > 0 ? Math.floor(n) : 120 * 1024 * 1024
+})()
+
 const uploadMemory = multer({
   storage: multer.memoryStorage(),
-  limits: { fileSize: 120 * 1024 * 1024 },
+  limits: { fileSize: uploadMaxBytes },
 })
 
 const PresignSchema = z.object({
@@ -413,8 +419,20 @@ app.post('/admin/uploads/complete', requireAuth, requireRole(['ADMIN', 'EDITOR']
 })
 
 app.use((err, req, res, next) => {
+  // multer 在 middleware 階段丟錯，會進到全域 error handler
+  if (err instanceof multer.MulterError) {
+    if (err.code === 'LIMIT_FILE_SIZE') {
+      const mb = Math.max(1, Math.floor(uploadMaxBytes / 1024 / 1024))
+      return res.status(413).json({
+        error: 'FILE_TOO_LARGE',
+        message: `檔案過大（上限約 ${mb}MB）。建議改用 STORAGE_DRIVER=r2（預簽名直傳）或壓縮影片後再上傳。`,
+      })
+    }
+    return res.status(400).json({ error: 'UPLOAD_BAD_REQUEST', message: err.message })
+  }
+
   console.error(err)
-  res.status(500).json({ error: 'INTERNAL_ERROR' })
+  return res.status(500).json({ error: 'INTERNAL_ERROR' })
 })
 
 prisma
