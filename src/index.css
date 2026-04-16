@@ -39,10 +39,12 @@
 
   /* 報導式正文排版（前台文章用） */
   .article-prose {
-    text-align: justify;
-    text-justify: inter-ideograph;
+    /* 中文兩端對齊在部分瀏覽器會拉開字距，影響閱讀；採左對齊 + 控制行長 */
+    text-align: left;
     word-break: break-word;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    line-height: 1.9;
+    max-width: 42em;
   }
 
   .article-prose p {
