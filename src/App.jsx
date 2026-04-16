@@ -741,12 +741,14 @@ function AdminEditor({ mode }) {
             </div>
 
             <div className="space-y-4 min-w-0">
+              <div className="text-sm text-textLight">引導頁 Markdown（可編輯）</div>
               <textarea
                 className="w-full border border-border px-3 py-2 min-h-[140px]"
                 placeholder="引導頁 Markdown（可選）"
                 value={form.introMarkdown}
                 onChange={set('introMarkdown')}
               />
+              <div className="text-sm text-textLight">全文 Markdown（可編輯）</div>
               <textarea
                 className="w-full border border-border px-3 py-2 min-h-[260px]"
                 placeholder="全文 Markdown"
@@ -754,7 +756,7 @@ function AdminEditor({ mode }) {
                 onChange={set('bodyMarkdown')}
               />
               <div className="border border-border p-4 min-w-0 overflow-x-auto">
-                <div className="text-sm text-textLight mb-2">預覽</div>
+                <div className="text-sm text-textLight mb-2">預覽（不可編輯）</div>
                 <div className="prose max-w-none wrap-break-word">
                   <ReactMarkdown>{form.bodyMarkdown || '_（尚無內容）_'}</ReactMarkdown>
                 </div>
