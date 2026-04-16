@@ -53,6 +53,9 @@
   .prose.article-prose p {
     margin: 0.9em 0;
     text-indent: 1em;
+    text-align: justify;
+    text-justify: inter-ideograph;
+    text-align-last: left;
   }
 
   /* 不讓「只有第二段起縮排」造成視覺跳動 */
