@@ -313,9 +313,9 @@ function ArticleFull() {
           >
             <div className="min-w-0">
               {row.introMarkdown ? (
-                <div className="mb-8 p-5 border border-border bg-[rgba(247,243,240,0.7)] text-textMain">
+                <div className="mb-10">
                   <div className="text-sm tracking-[2px] text-textLight mb-2">導讀</div>
-                  <div className="prose max-w-none article-prose text-[1.02rem] md:text-[1.08rem] leading-relaxed">
+                  <div className="prose max-w-none article-prose article-lead text-[1.02rem] md:text-[1.08rem] leading-relaxed">
                     <ReactMarkdown>{row.introMarkdown}</ReactMarkdown>
                   </div>
                 </div>
@@ -755,9 +755,9 @@ function AdminEditor({ mode }) {
                 value={form.bodyMarkdown}
                 onChange={set('bodyMarkdown')}
               />
-              <div className="border border-border p-4 min-w-0 overflow-x-auto">
+              <div className="min-w-0 overflow-x-auto">
                 <div className="text-sm text-textLight mb-2">預覽（不可編輯）</div>
-                <div className="prose max-w-none wrap-break-word">
+                <div className="prose max-w-none article-prose">
                   <ReactMarkdown>{form.bodyMarkdown || '_（尚無內容）_'}</ReactMarkdown>
                 </div>
               </div>

@@ -47,7 +47,17 @@
 
   .article-prose p {
     margin: 1.05em 0;
+    text-indent: 0;
+  }
+
+  /* 新聞常見：第一段不縮排，後續段落才縮排 */
+  .article-prose p + p {
     text-indent: 2em;
+  }
+
+  .article-prose :is(h1, h2, h3, h4, h5, h6) {
+    text-align: left;
+    text-indent: 0;
   }
 
   .article-prose :is(ul, ol) {
@@ -63,6 +73,13 @@
   .article-prose :is(blockquote, pre, table, hr) {
     text-align: left;
     text-indent: 0;
+  }
+
+  /* 導語/導讀（新聞常見開場） */
+  .article-lead {
+    text-indent: 0;
+    font-weight: 600;
+    letter-spacing: 0.2px;
   }
 }
 
