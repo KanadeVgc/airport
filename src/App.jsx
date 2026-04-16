@@ -1,7 +1,128 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate, useParams } from 'react-router-dom'
 import ReactMarkdown from 'react-markdown'
 import { api, getToken, setToken } from './api.js'
+
+function MarkdownEditor({
+  label,
+  value,
+  onChange,
+  placeholder,
+  minHeightClassName = 'min-h-[360px]',
+  previewTitle = '預覽（不可編輯）',
+}) {
+  const taRef = useRef(null)
+  const [tab, setTab] = useState('edit') // 'edit' | 'preview'
+
+  const apply = (fn) => {
+    const el = taRef.current
+    if (!el) return
+    const text = String(value ?? '')
+    const start = el.selectionStart ?? 0
+    const end = el.selectionEnd ?? 0
+    const next = fn({ text, start, end })
+    if (typeof next === 'string' && next !== text) onChange(next)
+    requestAnimationFrame(() => el.focus())
+  }
+
+  const btn = (title, onClick) => (
+    <button
+      type="button"
+      className="text-[0.85rem] border border-border px-2.5 py-1 hover:bg-[rgba(247,243,240,0.7)] transition"
+      onClick={onClick}
+    >
+      {title}
+    </button>
+  )
+
+  function wrapSelection({ text, start, end }, left, right = left) {
+    const sel = text.slice(start, end)
+    const next = text.slice(0, start) + left + sel + right + text.slice(end)
+    return next
+  }
+
+  function prefixLines({ text, start, end }, prefix) {
+    const before = text.slice(0, start)
+    const middle = text.slice(start, end)
+    const after = text.slice(end)
+
+    const hasTrailingNewline = middle.endsWith('\n')
+    const lines = (hasTrailingNewline ? middle.slice(0, -1) : middle).split('\n')
+    const nextMiddle = lines.map((l) => (l.startsWith(prefix) ? l : `${prefix}${l}`)).join('\n') + (hasTrailingNewline ? '\n' : '')
+    return before + nextMiddle + after
+  }
+
+  return (
+    <div className="border border-border bg-white min-w-0">
+      <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-b border-border">
+        <div className="text-sm text-textLight">{label}</div>
+        <div className="flex flex-wrap gap-2">
+          {btn('H2', () => apply((ctx) => prefixLines(ctx, '## ')))}
+          {btn('粗體', () => apply((ctx) => wrapSelection(ctx, '**')))}
+          {btn('斜體', () => apply((ctx) => wrapSelection(ctx, '*')))}
+          {btn('連結', () =>
+            apply((ctx) => {
+              const sel = ctx.text.slice(ctx.start, ctx.end) || '文字'
+              const left = '['
+              const right = '](https://)'
+              return ctx.text.slice(0, ctx.start) + left + sel + right + ctx.text.slice(ctx.end)
+            }),
+          )}
+          {btn('項目', () => apply((ctx) => prefixLines(ctx, '- ')))}
+          {btn('編號', () => apply((ctx) => prefixLines(ctx, '1. ')))}
+          {btn('引用', () => apply((ctx) => prefixLines(ctx, '> ')))}
+          {btn('程式碼', () =>
+            apply((ctx) => {
+              const sel = ctx.text.slice(ctx.start, ctx.end)
+              if (sel.includes('\n')) return wrapSelection(ctx, '\n```\n', '\n```\n')
+              return wrapSelection(ctx, '`', '`')
+            }),
+          )}
+        </div>
+      </div>
+
+      <div className="px-3 py-2 border-b border-border flex gap-2">
+        <button
+          type="button"
+          className={`text-[0.85rem] px-3 py-1 border border-border transition ${tab === 'edit' ? 'bg-[#333] text-white border-[#333]' : 'hover:bg-[rgba(247,243,240,0.7)]'}`}
+          onClick={() => setTab('edit')}
+        >
+          編輯
+        </button>
+        <button
+          type="button"
+          className={`text-[0.85rem] px-3 py-1 border border-border transition ${tab === 'preview' ? 'bg-[#333] text-white border-[#333]' : 'hover:bg-[rgba(247,243,240,0.7)]'}`}
+          onClick={() => setTab('preview')}
+        >
+          預覽
+        </button>
+      </div>
+
+      <div className="grid grid-cols-1">
+        <div className={`${tab !== 'edit' ? 'hidden' : ''} min-w-0`}>
+          <textarea
+            ref={taRef}
+            className={`w-full border-0 px-3 py-3 ${minHeightClassName} font-mono text-[0.92rem] leading-relaxed outline-none resize-y`}
+            placeholder={placeholder}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            spellCheck={false}
+          />
+        </div>
+        <div className={`${tab !== 'preview' ? 'hidden' : ''} min-w-0 border-t border-border`}>
+          <div className="px-3 py-2 text-xs text-textLight">{previewTitle}</div>
+          <div className="px-3 pb-4 overflow-x-auto">
+            <div className="w-full max-w-[720px] mx-auto">
+              <div className="prose article-prose">
+                <ReactMarkdown>{value || '_（尚無內容）_'}</ReactMarkdown>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function HeartbeatLogo({ onClick }) {
   return (
@@ -583,6 +704,7 @@ function AdminEditor({ mode }) {
   if (status === 'error') return <ErrorBlock error={error} />
 
   const set = (k) => (e) => setForm((s) => ({ ...s, [k]: e.target.value }))
+  const setValue = (k) => (v) => setForm((s) => ({ ...s, [k]: v }))
 
   const useR2Presign = import.meta.env.VITE_STORAGE_DRIVER === 'r2'
 
@@ -753,20 +875,13 @@ function AdminEditor({ mode }) {
                 onChange={set('introMarkdown')}
               />
               <div className="text-sm text-textLight">全文 Markdown（可編輯）</div>
-              <textarea
-                className="w-full border border-border px-3 py-2 min-h-[260px]"
-                placeholder="全文 Markdown"
+              <MarkdownEditor
+                label="全文 Markdown"
                 value={form.bodyMarkdown}
-                onChange={set('bodyMarkdown')}
+                onChange={setValue('bodyMarkdown')}
+                placeholder="在這裡貼上/撰寫 Markdown…"
+                minHeightClassName="min-h-[420px]"
               />
-              <div className="min-w-0 overflow-x-auto">
-                <div className="text-sm text-textLight mb-2">預覽（不可編輯）</div>
-                <div className="w-full max-w-[720px] mx-auto">
-                  <div className="prose article-prose">
-                    <ReactMarkdown>{form.bodyMarkdown || '_（尚無內容）_'}</ReactMarkdown>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </div>
