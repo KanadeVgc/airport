@@ -45,6 +45,9 @@
     overflow-wrap: break-word;
     line-height: 1.9;
     max-width: 42em;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
   }
 
   .article-prose p {
